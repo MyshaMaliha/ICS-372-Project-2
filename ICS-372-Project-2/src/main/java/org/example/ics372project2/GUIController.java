@@ -84,9 +84,9 @@ public class GUIController {
 
     @FXML
     private void addVehicle() {
-        String inputMethod = getUserInput("Add vehicle via File or Manual (enter 'manual' or 'file'):").toLowerCase();
+        String input = getUserInput("Add vehicle via File or Manual (enter 'manual' or 'file'):").toLowerCase();
 
-        if (inputMethod.equals("file")) {
+        if (input.equals("file")) {
             String filePath = getUserInput("Enter desired file path:");
             if (filePath != null && !filePath.trim().isEmpty()) {
                 try {
@@ -98,39 +98,40 @@ public class GUIController {
             } else {
                 showAlert("Invalid file path.");
             }
-            showAlert("Having issue with file reading.");
-            return;
-        } else if (!inputMethod.equals("manual")) {
+            showAlert("Successfully added the file.");
+        } else if (input.equals("manual")) {  // Manual input case
+            String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
+            if (dealerID == null) return;
+
+            Dealer selectedDealer = null;
+            for (Dealer d : dealerSet) {
+                if (d.getDealerID().equals(dealerID)) {
+                    selectedDealer = d;
+                    break;
+                }
+            }
+            if (selectedDealer == null) {
+                showAlert("Dealer ID not found.");
+                return;
+            }
+            if (!selectedDealer.getIsAcquisitionEnabled()) {
+                showAlert("Dealer Disabled");
+            } else {
+                String id = getUserInput("Enter Vehicle ID:");
+                String manufacturer = getUserInput("Enter manufacturer:");
+                String model = getUserInput("Enter Model:");
+                long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
+                double price = Double.parseDouble(getUserInput("Enter price:"));
+                String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
+
+                Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price);
+                boolean added = selectedDealer.addVehicle(newVehicle);
+                if (added) {
+                    showAlert("Vehicle added successfully to dealer" + dealerID);
+                }
+            }
+        } else {
             showAlert("Invalid option. Please enter 'manual' or 'file'.");
-            return;
-        }
-
-        // Manual input case
-        String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
-        if (dealerID == null) return;
-
-        Dealer selectedDealer = dealerSet.stream().filter(d -> d.getDealerID().equals(dealerID)).findFirst().orElse(null);
-        if (selectedDealer == null) {
-            showAlert("Dealer ID not found.");
-            return;
-        }
-
-        if (!selectedDealer.getIsAcquisitionEnabled()) {
-            showAlert("Dealer is disabled.");
-            return;
-        }
-
-        String vehicleID = getUserInput("Enter Vehicle ID:");
-        String manufacturer = getUserInput("Enter Manufacturer:");
-        String model = getUserInput("Enter Model:");
-        long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date (long):"));
-        double price = Double.parseDouble(getUserInput("Enter Price:"));
-        String type = getUserInput("Enter Vehicle Type (SUV, Sedan, Pickup, Sports Car):");
-
-        Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, vehicleID, acquisitionDate, price);
-        boolean added = selectedDealer.addVehicle(newVehicle);
-        if (added) {
-            showAlert("Vehicle added successfully to Dealer " + dealerID);
         }
     }
 
