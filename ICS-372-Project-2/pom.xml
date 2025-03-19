@@ -71,7 +71,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>org.example.ics372project2/org.example.ics372project2.HelloApplication
+                            <mainClass>org.example.ics372project2/org.example.ics372project2.GUIApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
