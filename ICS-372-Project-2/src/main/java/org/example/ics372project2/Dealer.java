@@ -29,5 +29,15 @@ public class Dealer {
     public boolean getIsAcquisitionEnabled(){return isAcquisitionEnabled;}
     public String getDealerName(){return dealerName;}
     public void setDealerName(String dealerName){this.dealerName = dealerName;}
+
+    /**
+     * loops through the list of vehicles and removes
+     * if a match was found based on the given vehicle object
+     *
+     * @param vehicle the vehicle object that is being removed
+     */
+    public void removeVehicle(Vehicle vehicle){
+        vehicleList.removeIf(v -> v.getVehicleID().equals(vehicle.getVehicleID()));
+    }
 }
 
