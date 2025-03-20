@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.ics372project2.GUIController">
+      fx:controller="org.example.ics372project2.GUIController"
+      stylesheets="@styles.css">
     <Label text="Car Dealership System" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
     <Button text="1. Load Dealership Data" onAction="#loadDealershipData"/>
     <Button text="2. Check Dealers and Vehicles" onAction="#checkDealers"/>
@@ -15,8 +16,6 @@
     <Button text="6. Update Dealer Name" onAction="#updateDealerName"/>
     <Button text="7. Export JSON file" onAction="#exportJSON"/>
 
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+
 
 </VBox>

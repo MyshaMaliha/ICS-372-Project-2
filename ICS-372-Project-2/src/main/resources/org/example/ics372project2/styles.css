@@ -1,0 +1,25 @@
+/* styles.css */
+.root {
+    -fx-background-color: #dae6eb;
+}
+
+.label {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.button {
+    -fx-font-size: 14px;
+    -fx-background-color: #bde2f0;
+    -fx-text-fill: black;
+    -fx-padding: 10px 60px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 5px;
+
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+}
+.button:hover {
+    -fx-background-color: #aeb2f2;
+}
