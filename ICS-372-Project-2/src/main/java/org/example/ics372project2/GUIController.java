@@ -1,8 +1,8 @@
 package org.example.ics372project2;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
@@ -15,30 +15,34 @@ public class GUIController {
     private final String FILE_NAME = "Dealers_Vehicles.json";
 
     @FXML
-    private void loadDealershipData() {
+    public void initialize(){  //JAVAFX will call initialize() method  before displaying the GUI
         File file = new File(FILE_NAME);
-        if (!file.exists()) {
-            showAlert("No existing file found. Creating a new one.");
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                showAlert("Error creating file: " + e.getMessage());
-            }
-        } else if (file.length() > 0) {
-            showAlert("Loading dealership data...");
-            try {
-                File_Reader.readFile(FILE_NAME, dealerSet);
-            } catch (IOException e) {
-                showAlert("Error loading the file: " + e.getMessage());
-            }
-        } else {
-            showAlert("Existing file is empty.");
+        if(file.exists()){
+            System.out.println("Loading dealership data...");
+        try{
+            File_Reader.readFile(FILE_NAME, dealerSet);
+        }catch (IOException e){
+            showAlert("Error loading the file: " +e.getMessage());
+        }
+        }else{
+            System.out.println("existing file is empty not found");
         }
     }
 
     @FXML
-    private void checkDealers() {
+    private void checkDealers() {   //printing each dealer and it's vehicle record
         StringBuilder result = new StringBuilder();
+        for(Dealer d: dealerSet){
+            result.append("---Dealer : ").append(d.getDealerID()).append(" ---\n");
+            result.append("---Dealer Name : ").append(d.getDealerName()).append(" ---\n");
+
+            for(Vehicle v: d.getVehicleList()){
+                result.append("Vehicle ID : ").append(v.getVehicleID()).append("\nModel: ").append((v.getModel())).append("\n");
+            }
+            result.append("\n");
+        }
+        showAlert2(result.toString().isEmpty()? "No delaers found." : result.toString());
+        /*
         for (Dealer d : dealerSet) {
             result.append("\n--- Dealer ").append(d.getDealerID()).append(" ---\n");
             for (Vehicle v : d.getVehicleList()) {
@@ -46,6 +50,8 @@ public class GUIController {
             }
         }
         showAlert(result.toString().isEmpty() ? "No dealers found." : result.toString());
+        */
+
     }
 
     @FXML
@@ -84,57 +90,84 @@ public class GUIController {
 
     @FXML
     private void addVehicle() {
-        String input = getUserInput("Add vehicle via File or Manual (enter 'manual' or 'file'):").toLowerCase();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("ADD Vehicle");
+        alert.setHeaderText("Choose how you want to add a vehicle: ");
+        alert.setContentText("Select an option below:");
 
-        if (input.equals("file")) {
-            String filePath = getUserInput("Enter desired file path:");
-            if (filePath != null && !filePath.trim().isEmpty()) {
-                try {
-                    File_Reader.readFile(filePath, dealerSet);
-                } catch (IOException e) {
-                    showAlert("Error loading file: " + e.getMessage());
-                }
-                showAlert("Vehicles loaded from file.");
-            } else {
-                showAlert("Invalid file path.");
-            }
-            showAlert("Successfully added the file.");
-        } else if (input.equals("manual")) {  // Manual input case
-            String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
-            if (dealerID == null) return;
+        //Create Buttons
+        ButtonType manualButton = new ButtonType("Manual");
+        ButtonType fileButton = new ButtonType("File");
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            Dealer selectedDealer = null;
-            for (Dealer d : dealerSet) {
-                if (d.getDealerID().equals(dealerID)) {
-                    selectedDealer = d;
-                    break;
-                }
-            }
-            if (selectedDealer == null) {
-                showAlert("Dealer ID not found.");
-                return;
-            }
-            if (!selectedDealer.getIsAcquisitionEnabled()) {
-                showAlert("Dealer Disabled");
-            } else {
-                String id = getUserInput("Enter Vehicle ID:");
-                String manufacturer = getUserInput("Enter manufacturer:");
-                String model = getUserInput("Enter Model:");
-                long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
-                double price = Double.parseDouble(getUserInput("Enter price:"));
-                String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
+        alert.getButtonTypes().setAll(manualButton, fileButton, cancelButton);
 
-                Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price);
-                boolean added = selectedDealer.addVehicle(newVehicle);
-                if (added) {
-                    showAlert("Vehicle added successfully to dealer" + dealerID);
-                }
+
+        //Apply Styles to Dialog Pane
+        DialogPane dialogPane =alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
+
+
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == fileButton) {
+                handleFileInput();
+            } else if (result.get() == manualButton) {
+                handleManualInput();
             }
-        } else {
-            showAlert("Invalid option. Please enter 'manual' or 'file'.");
         }
     }
 
+
+     private void handleFileInput() {
+         String filePath = getUserInput("Enter desired file path:");
+         if (filePath != null && !filePath.trim().isEmpty()) {
+             try {
+                 File_Reader.readFile(filePath, dealerSet);
+             } catch (IOException e) {
+                 showAlert("Error loading file: " + e.getMessage());
+             }
+             showAlert("Vehicles loaded from file.");
+         } else {
+             showAlert("Invalid file path.");
+         }
+     }
+
+     private void handleManualInput() {
+         String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
+         if (dealerID == null) return;
+
+         Dealer selectedDealer = null;
+         for (Dealer d : dealerSet) {
+             if (d.getDealerID().equals(dealerID)) {
+                 selectedDealer = d;
+                 break;
+             }
+         }
+         if (selectedDealer == null) {
+             showAlert("Dealer ID not found.");
+             return;
+         }
+         if (!selectedDealer.getIsAcquisitionEnabled()) {
+             showAlert("Dealer Disabled");
+         } else {
+             String id = getUserInput("Enter Vehicle ID:");
+             String manufacturer = getUserInput("Enter manufacturer:");
+             String model = getUserInput("Enter Model:");
+             long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
+             double price = Double.parseDouble(getUserInput("Enter price:"));
+             String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
+
+             Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price);
+             boolean added = selectedDealer.addVehicle(newVehicle);
+             if (added) {
+                 showAlert("Vehicle added successfully to dealer" + dealerID);
+             }
+         }
+     }
 
     @FXML
     private void updateDealerName() {
@@ -161,12 +194,27 @@ public class GUIController {
         }
         showAlert("Exported JSON file successfully.");
     }
+    @FXML
+    private void transferInventory(){
+
+    }
+
+    @FXML
+    private void loanedVehicleData() {
+    }
+
 
     // Helper methods
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Car Dealership System");
         alert.setContentText(message);
+
+        //Apply Styles
+        DialogPane dialogPane =alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
         alert.showAndWait();
     }
 
@@ -174,7 +222,45 @@ public class GUIController {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Input Required");
         dialog.setHeaderText(prompt);
+
+        //Apply styles
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
         Optional<String> result = dialog.showAndWait();
         return result.orElse(null);
     }
+        //making a  ScrollPane to make the alert's content scrollable
+        private void showAlert2(String message) {
+            //Create a TextArea with the content
+            TextArea textArea = new TextArea(message);
+            textArea.setWrapText(true);   //Wrap the text so it does not go out of the TextArea
+            textArea.setEditable(false);  //Disable editing of the TextArea
+
+            //Create a ScrollPane and add the TextArea to it
+            ScrollPane scrollPane = new ScrollPane(textArea);
+            scrollPane.setFitToWidth(true);  //Ensures the content fits the width of the dialog
+
+            //Create a custom alert with the scrollable content
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Dealer and Vehicle Information");
+
+            //Set the dialog's content to the ScrollPane
+            dialog.getDialogPane().setContent(scrollPane);
+
+            //Add an ok Button ti close the dialog
+            ButtonType okButton = new ButtonType("OK");
+            dialog.getDialogPane().getButtonTypes().add(okButton);
+
+            //Apply Styles
+            DialogPane dialogPane =dialog.getDialogPane();
+            dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+            dialogPane.getStyleClass().add("dialog-pane");
+
+            //shoe the dialog and wait for the user to close it
+            dialog.showAndWait();
+
+        }
+
 }

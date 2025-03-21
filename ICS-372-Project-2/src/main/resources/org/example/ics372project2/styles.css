@@ -1,6 +1,7 @@
 /* styles.css */
 .root {
-    -fx-background-color: #dae6eb;
+    -fx-background-color: #a39993;
+
 }
 
 .label {
@@ -11,8 +12,8 @@
 
 .button {
     -fx-font-size: 14px;
-    -fx-background-color: #bde2f0;
-    -fx-text-fill: black;
+    -fx-background-color: #d48653;
+    -fx-text-fill: white;
     -fx-padding: 10px 60px;
     -fx-border-radius: 20px;
     -fx-background-radius: 5px;
@@ -21,5 +22,47 @@
     -fx-pref-height: 40px;
 }
 .button:hover {
-    -fx-background-color: #aeb2f2;
+    -fx-background-color: #d1a588;
 }
+
+.dialog-pane{    /* Styles the entire pop-uo window */
+    -fx-background-color: #a39993;
+    -fx-border-color: #d48653;
+    -fx-border-width: 2px;
+   -fx-border-radius: 5px;
+}
+.dialog-pane .header-panel{   /*Changes the background and font size of the header */
+    -fx-background-color: #d48653;
+    -fx-text-fill:white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+.dialog-pane .content{   /*Customizes text color and size inside the dialog */
+    -fx-font-size: 16px;
+    -fx-text-fill:#333;
+}
+.dialog-pane .text-field{   /*Formats the input filed inside the dialog*/
+    -fx-font-size: 16px;
+    -fx-padding: 8px;
+    -fx-border-color: #d48653;
+    -fx-border-width:2px;
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: #333;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+.dialog-pane .text-field:focused{
+    -fx-border-color: #d1a588;
+    -fx-background-color: white;
+}
+.dialog-pane .button{  /*Styles the buttons */
+    -fx-background-color: #d48653;
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+}
+.dialog.pane .button:hover{
+    fx-background-color: #d1a588;
+}
+
+
