@@ -55,12 +55,16 @@ public class JSONReader extends File_Reader {
                 String manufacturer = (String) vehicle.get("vehicle_manufacturer");
                 String model = (String) vehicle.get("vehicle_model");
                 String id = (String) vehicle.get("vehicle_id");
-
-
-                long price = ((Number) vehicle.get("price")).longValue();
                 long acquisitionDate = ((Number) vehicle.get("acquisition_date")).longValue();
+                long price = ((Number) vehicle.get("price")).longValue();
 
-                Vehicle newVehicle = checkType(type, manufacturer, model, id, acquisitionDate, price);
+                boolean vehicleIsLoaned = false;
+                if(vehicle.containsKey("is_loaned")){
+                    vehicleIsLoaned = (boolean) vehicle.get("is_loaned");
+                }else{
+                    vehicleIsLoaned = false;
+                }
+                Vehicle newVehicle = checkType(type, manufacturer, model, id, acquisitionDate, price, vehicleIsLoaned);
 
                 boolean found = false;
                 for (Dealer d : dealerSet) {
@@ -93,22 +97,23 @@ public class JSONReader extends File_Reader {
      * @param id              Vehicle ID
      * @param acquisitionDate Vehicle AcquisitionDate
      * @param price           Vehicle price
+     * @param vehicleIsLoaned
      * @return Vehicle        A new specific type Vehicle object will be returned
      */
-    static Vehicle checkType(String type, String manufacturer, String model, String id, long acquisitionDate, double price) {
+    static Vehicle checkType(String type, String manufacturer, String model, String id, long acquisitionDate, double price, boolean vehicleIsLoaned) {
         Vehicle newVehicle = null;
         switch (type.toLowerCase()) {
             case "suv":
-                newVehicle = new SUV(id, manufacturer, model, acquisitionDate, price);
+                newVehicle = new SUV(id, manufacturer, model, acquisitionDate, price, vehicleIsLoaned);
                 break;
             case "sedan":
-                newVehicle = new Sedan(id, manufacturer, model, acquisitionDate, price);
+                newVehicle = new Sedan(id, manufacturer, model, acquisitionDate, price, vehicleIsLoaned);
                 break;
             case "pickup":
-                newVehicle = new Pickup(id, manufacturer, model, acquisitionDate, price);
+                newVehicle = new Pickup(id, manufacturer, model, acquisitionDate, price, vehicleIsLoaned);
                 break;
             case "sports car":
-                newVehicle = new SportsCar(id, manufacturer, model, acquisitionDate, price);
+                newVehicle = new SportsCar(id, manufacturer, model, acquisitionDate, price, vehicleIsLoaned);
                 break;
             default:
                 System.out.println("Unknown vehicle type: " + type);
