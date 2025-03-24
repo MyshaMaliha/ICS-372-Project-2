@@ -62,41 +62,7 @@ public class Dealer {
         vehicleList.removeIf(v -> v.getVehicleID().equals(vehicle.getVehicleID()));
     }
 
-    //Loan a vehicle only if it's not a sports car
-    public boolean loanVehicle(String vehicleID) {
-        for (Vehicle v : vehicleList) {
-            if (v.getVehicleID().equals(vehicleID)) {
-                if (v.getModel().toLowerCase().contains("Sports")) {
-                    return false; //cannot rent sports car
-                }
-                v.setLoaned(true);
-                return true;
-            }
-        }
-        return false;
-    }
 
-    //Return a loaned vehicle
-    public boolean returnVehicle(String vehicleID) {
-        for (Vehicle v : vehicleList) {
-            if (v.getVehicleID().equals(vehicleID) && v.getIsLoaned()) {
-                v.setLoaned(false);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //getting a list of loaned vehicle
-    public List<Vehicle> getLoanedVehicles(){
-      List<Vehicle> lonedVehicleList = new ArrayList<>();
-      for(Vehicle v: vehicleList){
-          if(v.isLoaned){
-              lonedVehicleList.add(v);
-          }
-      }
-      return lonedVehicleList;
-    }
 
 }
 

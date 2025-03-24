@@ -48,7 +48,7 @@ public class GUIController {
         }
 
     @FXML
-    private void enableDealer() {
+    private void enableDealer() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to Enable:");
         if (dealerID == null) return;
 
@@ -62,10 +62,11 @@ public class GUIController {
             }
         }
         if (!found) showAlert("Dealer ID not found.");
+        File_Writer.exportJSON(dealerSet);
     }
 
     @FXML
-    private void disableDealer() {
+    private void disableDealer() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to Disable:");
         if (dealerID == null) return;
 
@@ -79,10 +80,11 @@ public class GUIController {
             }
         }
         if (!found) showAlert("Dealer ID not found.");
+        File_Writer.exportJSON(dealerSet);
     }
 
     @FXML
-    private void addVehicle() {
+    private void addVehicle() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("ADD Vehicle");
         alert.setHeaderText("Choose how you want to add a vehicle: ");
@@ -115,7 +117,7 @@ public class GUIController {
     }
 
 
-     private void handleFileInput() {
+     private void handleFileInput() throws IOException {
          String filePath = getUserInput("Enter desired file path:");
          if (filePath != null && !filePath.trim().isEmpty()) {
              try {
@@ -127,9 +129,10 @@ public class GUIController {
          } else {
              showAlert("Invalid file path.");
          }
+         File_Writer.exportJSON(dealerSet);
      }
 
-     private void handleManualInput() {
+     private void handleManualInput() throws IOException{
          String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
          if (dealerID == null) return;
 
@@ -161,6 +164,7 @@ public class GUIController {
                  showAlert("Vehicle added successfully to dealer" + dealerID);
              }
          }
+         File_Writer.exportJSON(dealerSet);
      }
 
     @FXML
@@ -195,7 +199,7 @@ public class GUIController {
 
     }
     @FXML
-    private void loanVehicle(){
+    private void loanVehicle() throws IOException{
     String dealerID =getUserInput("Enter Dealer ");
     if(dealerID == null || dealerID.trim().isEmpty()){
         showAlert("Dealer ID cannot be empty");
@@ -211,14 +215,15 @@ public class GUIController {
         showAlert("Vehicle ID is empty");
         return;
     }
-    if(dealer.loanVehicle(vehicleID)){
+    if(Loan_Vehicle.loanVehicle(dealer,vehicleID)){
         showAlert("Vehicle "+ vehicleID + " has been loaned.");
     }else{
         showAlert("Vehicle ID not found or cannot be loaned(sports cars are not allowed).");
     }
+    File_Writer.exportJSON(dealerSet);
     }
     @FXML
-    private void returnVehicle(){
+    private void returnVehicle() throws IOException {
     String dealerID = getUserInput("Enter DealerID: ");
     if(dealerID== null || dealerID.trim().isEmpty()){
         showAlert("Dealer ID cannot be empty");
@@ -233,18 +238,19 @@ public class GUIController {
     if(vehicleID ==null || vehicleID.trim().isEmpty()){
         showAlert("Vehicle ID cannot be empty.");
         }
-    if(dealer.returnVehicle(vehicleID)){
+    if(Loan_Vehicle.returnVehicle(dealer,vehicleID)){
         showAlert("Vehicle "+ vehicleID + " has been returned.");
         }else {
         showAlert("Vehicle ID not found or was not loaned out.");
     }
+        File_Writer.exportJSON(dealerSet);
 }
 @FXML
-private void showLoanedVehicles() {
+private void showLoanedVehicles() throws IOException {
     StringBuilder result = new StringBuilder("Loaned Vehicles:\n");
 
     for(Dealer d: dealerSet){
-        List<Vehicle> loanedVehicles = d.getLoanedVehicles();
+        List<Vehicle> loanedVehicles = Loan_Vehicle.getLoanedVehicles(d);
         if(!loanedVehicles.isEmpty()){
             result.append("\nDealer: ").append(d.getDealerID()).append("\n");
             for(Vehicle v: loanedVehicles){
@@ -253,6 +259,7 @@ private void showLoanedVehicles() {
         }
     }
     showAlert2(result.toString().isEmpty() ? "No vehicles are currently loaned." : result.toString());
+    File_Writer.exportJSON(dealerSet);
 }
 
     // Helper methods
