@@ -14,8 +14,7 @@ class DealerTest {
     void setUp() {
         dealer = new Dealer("001");
         dealer.setDealerName("Test Dealer");
-        testVehicle = new Sedan("V-01", "Toyota", "Camry",
-                0L, 23000.0, false);
+        testVehicle = new Sedan("V-01", "Toyota", "Camry", 0L, 23000.0, false);
     }
 
 
