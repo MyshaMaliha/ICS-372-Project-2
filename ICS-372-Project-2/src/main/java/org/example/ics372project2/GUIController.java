@@ -124,6 +124,7 @@ public class GUIController {
             try {
                 File_Reader.readFile(filePath, dealerSet);
                 showAlert("Vehicles loaded from file.");
+                File_Writer.exportJSON(dealerSet);
             } catch (IOException e) {
                 showAlert("Error loading file: " + e.getMessage());
             }
@@ -133,7 +134,7 @@ public class GUIController {
         }
     }
 
-    private void handleManualInput() {
+    private void handleManualInput()  {
         String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
         if (dealerID == null) return;
 
@@ -164,11 +165,12 @@ public class GUIController {
             if (added) {
                 showAlert("Vehicle added successfully to dealer" + dealerID);
             }
+
         }
     }
 
     @FXML
-    private void updateDealerName() {
+    private void updateDealerName() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to update name:");
         if (dealerID == null) return;
 
@@ -180,16 +182,20 @@ public class GUIController {
 
         String newName = getUserInput("Enter new Dealer Name:");
         dealer.setDealerName(newName);
+
         showAlert("Dealer name updated successfully.");
+        File_Writer.exportJSON(dealerSet);
+
     }
 
     @FXML
-    private void exportJSON() {
+    private void exportJSON() throws IOException {
         try {
             File_Writer.exportJSON(dealerSet);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        File_Writer.exportJSON(dealerSet);
         showAlert("Exported JSON file successfully.");
     }
 

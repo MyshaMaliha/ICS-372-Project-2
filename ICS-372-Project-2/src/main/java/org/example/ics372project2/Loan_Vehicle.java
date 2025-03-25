@@ -11,7 +11,7 @@ public class Loan_Vehicle {
 
         for (Vehicle v : dealer.getVehicleList()) {
             if (v.getVehicleID().equals(vehicleID)) {
-                if (v.getModel().toLowerCase().contains("Sports")) {
+                if (v.getModel().toLowerCase().contains("sports car")) {
                     return false; //cannot rent sports car
                 }
                 v.setLoaned(true);
