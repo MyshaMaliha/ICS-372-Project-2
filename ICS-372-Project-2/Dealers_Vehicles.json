@@ -18,7 +18,7 @@
     "vehicle_id" : "89343883",
     "price" : 70444.0,
     "acquisition_date" : 1515354694451,
-    "is_loaned" : false
+    "is_loaned" : true
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
@@ -28,7 +28,7 @@
     "vehicle_id" : "848432",
     "price" : 17000.0,
     "acquisition_date" : 0,
-    "is_loaned" : false
+    "is_loaned" : true
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",

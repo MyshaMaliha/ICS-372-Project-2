@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Loan_Vehicle {
+
+
     //Loan a vehicle only if it's not a sports car
     public static boolean loanVehicle(Dealer dealer,String vehicleID) {
 
@@ -13,7 +15,6 @@ public class Loan_Vehicle {
                     return false; //cannot rent sports car
                 }
                 v.setLoaned(true);
-
                 return true;
             }
         }
@@ -31,7 +32,7 @@ public class Loan_Vehicle {
         return false;
     }
 
-    //getting a list of loaned vehicle
+    //getting a list of loaned vehicleget
     public static List<Vehicle> getLoanedVehicles(Dealer dealer){
         List<Vehicle> lonedVehicleList = new ArrayList<>();
         for(Vehicle v: dealer.getVehicleList()){

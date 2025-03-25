@@ -308,7 +308,7 @@ public class GUIController {
             if (!loanedVehicles.isEmpty()) {
                 result.append("\nDealer: ").append(d.getDealerName()).append("\n");
                 for (Vehicle v : loanedVehicles) {
-                    result.append("Vehicle").append(v.getVehicleID()).append("\n");
+                    result.append("Vehicle: ").append(v.getVehicleID()).append("\n");
                 }
             }
         }

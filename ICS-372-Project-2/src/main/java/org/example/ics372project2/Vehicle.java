@@ -9,14 +9,14 @@ public abstract class Vehicle {
     protected String type;
     protected boolean isLoaned;   //adding new filed to track loaned vehicle
 
-    public Vehicle(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, String type) {
+    public Vehicle(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, String type, boolean isLoaned) {
         this.vehicleID = vehicleID;
         this.manufacturer = manufacturer;
         this.model = model;
         this.acquisitionDate = acquisitionDate;
         this.price = price;
         this.type = type;
-        this.isLoaned = false;
+        this.isLoaned = isLoaned;
     }
     // Getter methods to retrieve the values of instance variables/attributes
     public String getVehicleID() { return vehicleID; }
@@ -31,29 +31,29 @@ public abstract class Vehicle {
 
 class SUV extends Vehicle{
     //Constructor
-    public SUV(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean vehicleIsLoaned){
-        super(vehicleID, manufacturer, model, acquisitionDate, price, "suv");
+    public SUV(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean isLoaned){
+        super(vehicleID, manufacturer, model, acquisitionDate, price, "suv", isLoaned );
     }
 }
 
 class Sedan extends Vehicle{
     //Constructor
-    public Sedan(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean vehicleIsLoaned){
-        super(vehicleID, manufacturer, model, acquisitionDate, price, "sedan");
+    public Sedan(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean isLoaned){
+        super(vehicleID, manufacturer, model, acquisitionDate, price, "sedan", isLoaned);
     }
 }
 
 class Pickup extends Vehicle{
     //Constructor
-    public Pickup(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean vehicleIsLoaned){
-        super(vehicleID, manufacturer, model, acquisitionDate, price, "pickup");
+    public Pickup(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean isLoaned){
+        super(vehicleID, manufacturer, model, acquisitionDate, price, "pickup", isLoaned);
     }
 }
 
 class SportsCar extends Vehicle{
     //Constructor
-    public SportsCar(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean vehicleIsLoaned){
-        super(vehicleID, manufacturer, model, acquisitionDate, price, "sports car");
+    public SportsCar(String vehicleID, String manufacturer, String model, long acquisitionDate, double price, boolean isLoaned){
+        super(vehicleID, manufacturer, model, acquisitionDate, price, "sports car", isLoaned);
     }
 }
 
