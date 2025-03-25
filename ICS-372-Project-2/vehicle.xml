@@ -9,7 +9,7 @@
         <Vehicle type="pickup" id="52523">
             <Price unit="dollars">22600</Price>
             <Make>Toyota</Make>
-            <Model>Tundra</Model>
+            <Model></Model>
         </Vehicle>
         <Vehicle type="sedan" id="151e5dde">
             <Price unit="dollars">36600</Price>

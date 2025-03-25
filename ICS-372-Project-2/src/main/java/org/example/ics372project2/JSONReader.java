@@ -78,7 +78,8 @@ public class JSONReader extends File_Reader {
                 boolean found = false;
                 for (Dealer d : dealerSet) {
                     if (d.getDealerID().equals(dealershipID)) {
-                        d.getVehicleList().add(newVehicle);  //Temporary bypass "isAcquisitionEnabled" to ensure all JSON vehicles load
+                         d.addVehicle(newVehicle);
+                        //d.getVehicleList().add(newVehicle);  //Temporary bypass "isAcquisitionEnabled" to ensure all JSON vehicles load
                         d.setDealerName(dealerName);
                         d.setAcquisitionEnabled(isAcquisitionEnabled);
                         found = true;
@@ -90,7 +91,8 @@ public class JSONReader extends File_Reader {
                     if(dealerName.length()>0){
                         d.setDealerName(dealerName);
                     }
-                    d.getVehicleList().add(newVehicle);  //Temporary bypass "isAcquisitionEnabled" to ensure all JSON vehicles load
+                    d.addVehicle(newVehicle);
+                    //d.getVehicleList().add(newVehicle);  //Temporary bypass "isAcquisitionEnabled" to ensure all JSON vehicles load
                     d.setAcquisitionEnabled(isAcquisitionEnabled);  //Correctly set from JSON
                     dealerSet.add(d);
                 }

@@ -18,51 +18,52 @@ public class XMLReader extends File_Reader {
     public void parse(Set<Dealer> dealerSet) throws IOException {
         try {
             File xmlFile = new File(filePath);
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); // Creates a new instance of DocumentBuilderFactory, which is needed to create a DocumentBuilder
-            DocumentBuilder builder = factory.newDocumentBuilder(); // Uses the factory to create a DocumentBuilder object, which is used to parse the XML file.
-            Document doc = builder.parse(xmlFile);  //Parses the XML file and loads it into a Document object.
-            doc.getDocumentElement().normalize();   //Normalizes the document structure, ensuring consistency in how elements and text nodes are processed
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(xmlFile);
+            doc.getDocumentElement().normalize();
 
-            // Get all Dealer nodes
             NodeList dealerNodes = doc.getElementsByTagName("Dealer");
 
-            for (int i = 0; i < dealerNodes.getLength(); i++) {  //Iterates through all dealer nodes.
+            for (int i = 0; i < dealerNodes.getLength(); i++) {
                 Node dealerNode = dealerNodes.item(i);
-                if (dealerNode.getNodeType() == Node.ELEMENT_NODE) {  //Ensures that the node is an element (not text or comment).
+                if (dealerNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element dealerElement = (Element) dealerNode;
-                    String dealerID = dealerElement.getAttribute("id");
 
-                    Dealer dealer = getOrCreateDealer(dealerID, dealerSet); //Get or create the Dealer object
-
-                    // Extract dealer name if it exists
-                    String dealerName;
-                    NodeList nameNodes = dealerElement.getElementsByTagName("Name");
-                    if (nameNodes.getLength() > 0) {
-                        dealerName = nameNodes.item(0).getTextContent();
-                        dealer.setDealerName(dealerName);
+                    // Ensure dealer has a valid ID
+                    String dealerID = dealerElement.getAttribute("id").trim();
+                    if (dealerID.isEmpty()) {
+                        throw new IOException("Error: Dealer is missing 'id' attribute. Stopping file processing.");
                     }
 
+                    Dealer dealer = getOrCreateDealer(dealerID, dealerSet);
 
-                    // Get all Vehicle nodes inside this dealer
+                    // Extract dealer name if it exists
+                    NodeList nameNodes = dealerElement.getElementsByTagName("Name");
+                    if (nameNodes.getLength() > 0) {
+                        dealer.setDealerName(nameNodes.item(0).getTextContent().trim());
+                    }
+
                     NodeList vehicleNodes = dealerElement.getElementsByTagName("Vehicle");
-
                     for (int j = 0; j < vehicleNodes.getLength(); j++) {
                         Node vehicleNode = vehicleNodes.item(j);
                         if (vehicleNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element vehicleElement = (Element) vehicleNode;
 
-                            // Extract attributes and elements
-                            String type = vehicleElement.getAttribute("type");
-                            String vehicleID = vehicleElement.getAttribute("id");
-                            String manufacturer = vehicleElement.getElementsByTagName("Make").item(0).getTextContent();
-                            String model = vehicleElement.getElementsByTagName("Model").item(0).getTextContent();
-                            double price = Double.parseDouble(vehicleElement.getElementsByTagName("Price").item(0).getTextContent());
-                            boolean vehicleIsLoaned = false;
-                            NodeList loanedNodes = vehicleElement.getElementsByTagName("is_loaned");
-                            if(loanedNodes.getLength()>0){
-                                vehicleIsLoaned = Boolean.parseBoolean(loanedNodes.item(0).getTextContent().trim());
+                            // Ensure vehicle has a type and ID
+                            String type = vehicleElement.getAttribute("type").trim();
+                            String vehicleID = vehicleElement.getAttribute("id").trim();
+                            if (type.isEmpty() || vehicleID.isEmpty()) {
+                                throw new IOException("Error: Vehicle missing 'type' or 'id' in Dealer " + dealerID + ". Stopping file processing.");
                             }
-                            // No acquisition date in XML, setting to 0
+
+                            // Extract optional fields with defaults
+                            String manufacturer = getElementText(vehicleElement, "Make", "Unknown");
+                            String model = getElementText(vehicleElement, "Model", "Unknown");
+                            double price = getElementDouble(vehicleElement, "Price", 0.0);
+                            boolean vehicleIsLoaned = getElementBoolean(vehicleElement, "is_loaned", false);
+
+                            // Create vehicle and add it to the dealer
                             Vehicle vehicle = checkType(type, manufacturer, model, vehicleID, 0, price, vehicleIsLoaned);
                             if (vehicle != null) {
                                 dealer.addVehicle(vehicle);
@@ -71,11 +72,13 @@ public class XMLReader extends File_Reader {
                     }
                 }
             }
+        } catch (IOException e) {
+            System.out.println(e.getMessage()); // Print the error message before stopping
+            throw e; // Rethrow the exception to completely stop the program
         } catch (Exception e) {
-            System.out.println("Error parsing XML file: " + e.getMessage());
+            throw new IOException("Error parsing XML file: " + e.getMessage());
         }
     }
-
     private Dealer getOrCreateDealer(String dealerID, Set<Dealer> dealerSet) {
         for (Dealer d : dealerSet) {
             if (d.getDealerID().equals(dealerID)) {
@@ -94,10 +97,33 @@ public class XMLReader extends File_Reader {
             case "pickup" -> new Pickup(id, manufacturer, model, acquisitionDate, price, vehicleIsLoaned);
             case "sports car" -> new SportsCar(id, manufacturer, model, acquisitionDate, price, vehicleIsLoaned);
             default -> {
-                System.out.println("Unknown vehicle type: " + type);
+                System.out.println("Unknown vehicle type: " + type + " (Dealer ID: " + id + ")");
                 yield null;
             }
         };
+    }
+
+    // Helper method to safely get text content from an XML element, with a default value
+    private String getElementText(Element parent, String tagName, String defaultValue) {
+        NodeList nodeList = parent.getElementsByTagName(tagName);
+        return (nodeList.getLength() > 0) ? nodeList.item(0).getTextContent().trim() : defaultValue;
+    }
+
+    // Helper method to safely get a double value from an XML element, with a default value
+    private double getElementDouble(Element parent, String tagName, double defaultValue) {
+        try {
+            NodeList nodeList = parent.getElementsByTagName(tagName);
+            return (nodeList.getLength() > 0) ? Double.parseDouble(nodeList.item(0).getTextContent().trim()) : defaultValue;
+        } catch (NumberFormatException e) {
+            System.out.println("Warning: Invalid number format for " + tagName + ". Using default: " + defaultValue);
+            return defaultValue;
+        }
+    }
+
+    // Helper method to safely get a boolean value from an XML element, with a default value
+    private boolean getElementBoolean(Element parent, String tagName, boolean defaultValue) {
+        NodeList nodeList = parent.getElementsByTagName(tagName);
+        return (nodeList.getLength() > 0) ? Boolean.parseBoolean(nodeList.item(0).getTextContent().trim()) : defaultValue;
     }
 }
 
