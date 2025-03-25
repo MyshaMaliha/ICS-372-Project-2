@@ -17,7 +17,9 @@
     <Button text="5. Update Dealer Name" onAction="#updateDealerName"/>
     <Button text="6. Export JSON file" onAction="#exportJSON"/>
     <Button text="7. Transfer Inventory" onAction="#transferInventory"/>
-    <Button text="8  Loaned Vehicle" onAction="#loanedVehicleData"/>
+    <Button text="8. Loan Vehicle" onAction="#loanVehicle"/>
+    <Button text="9. Return Vehicle" onAction="#returnVehicle"/>
+    <Button text="10. Loaned Vehicles List" onAction="#showLoanedVehicles"/>
 
 
 

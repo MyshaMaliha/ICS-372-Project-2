@@ -30,6 +30,7 @@ public class File_Writer {
                 vehicleData.put("vehicle_id", v.getVehicleID());       // Assuming getId() exists
                 vehicleData.put("price", v.getPrice());
                 vehicleData.put("acquisition_date", v.getAcquisitionDate());
+                vehicleData.put("is_loaned", v.getIsLoaned());
 
                 innerList.add(vehicleData);     //add the  vehicle Obj to innerList (list)
             }
