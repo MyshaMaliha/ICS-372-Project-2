@@ -123,10 +123,11 @@ public class GUIController {
         if (filePath != null && !filePath.trim().isEmpty()) {
             try {
                 File_Reader.readFile(filePath, dealerSet);
+                showAlert("Vehicles loaded from file.");
             } catch (IOException e) {
                 showAlert("Error loading file: " + e.getMessage());
             }
-            showAlert("Vehicles loaded from file.");
+
         } else {
             showAlert("Invalid file path.");
         }
