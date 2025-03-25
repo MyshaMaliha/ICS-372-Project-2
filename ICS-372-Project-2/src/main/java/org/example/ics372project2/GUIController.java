@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -38,19 +39,11 @@ public class GUIController {
 
             for (Vehicle v : d.getVehicleList()) {
                 result.append("Vehicle ID : ").append(v.getVehicleID()).append("\nModel: ").append((v.getModel())).append("\n");
+                result.append("Loaned: ").append(v.getIsLoaned()).append("\n");
             }
             result.append("\n");
         }
         showAlert2(result.toString().isEmpty() ? "No delaers found." : result.toString());
-        /*
-        for (Dealer d : dealerSet) {
-            result.append("\n--- Dealer ").append(d.getDealerID()).append(" ---\n");
-            for (Vehicle v : d.getVehicleList()) {
-                result.append("Vehicle ID: ").append(v.getVehicleID()).append("\nModel: ").append(v.getModel()).append("\n");
-            }
-        }
-        showAlert(result.toString().isEmpty() ? "No dealers found." : result.toString());
-        */
 
     }
 
@@ -158,8 +151,9 @@ public class GUIController {
             long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
             double price = Double.parseDouble(getUserInput("Enter price:"));
             String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
+            boolean isLoaned = Boolean.parseBoolean(getUserInput("Loaned(true/false: "));
 
-            Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price);
+            Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price, isLoaned);
             boolean added = selectedDealer.addVehicle(newVehicle);
             if (added) {
                 showAlert("Vehicle added successfully to dealer" + dealerID);
@@ -241,8 +235,89 @@ public class GUIController {
     }
 
     @FXML
-    private void loanedVehicleData() {
+    private void loanVehicle() throws IOException {
+        String dealerID = getUserInput("Enter Dealer ID:");
+        if (dealerID == null || dealerID.trim().isEmpty()) {
+            showAlert("Dealer ID cannot be empty.");
+            return;
+        }
+
+        Dealer dealer = dealerSet.stream()
+                .filter(d -> d.getDealerID().equals(dealerID))
+                .findFirst()
+                .orElse(null);
+
+        if (dealer == null) {
+            showAlert("Dealer ID not found.");
+            return;
+        }
+
+        String vehicleID = getUserInput("Enter Vehicle ID:");
+        if (vehicleID == null || vehicleID.trim().isEmpty()) {
+            showAlert("Vehicle ID cannot be empty.");
+            return;
+        }
+
+        if (Loan_Vehicle.loanVehicle(dealer, vehicleID)) {
+            showAlert("Vehicle " + vehicleID + " has been loaned.");
+        } else {
+            showAlert("Vehicle ID not found or cannot be loaned (sports cars are not allowed).");
+        }
+        File_Writer.exportJSON(dealerSet);
+
     }
+
+    @FXML
+    private void returnVehicle() throws IOException {
+        String dealerID = getUserInput("Enter Dealer ID:");
+        if (dealerID == null || dealerID.trim().isEmpty()) {
+            showAlert("Dealer ID cannot be empty.");
+            return;
+        }
+
+        Dealer dealer = dealerSet.stream()
+                .filter(d -> d.getDealerID().equals(dealerID))
+                .findFirst()
+                .orElse(null);
+
+        if (dealer == null) {
+            showAlert("Dealer ID not found.");
+            return;
+        }
+
+        String vehicleID = getUserInput("Enter Vehicle ID:");
+        if (vehicleID == null || vehicleID.trim().isEmpty()) {
+            showAlert("Vehicle ID cannot be empty.");
+            return;
+        }
+
+        if (Loan_Vehicle.returnVehicle(dealer,vehicleID)) {
+            showAlert("Vehicle " + vehicleID + " has been returned.");
+        } else {
+            showAlert("Vehicle ID not found or was not loaned out.");
+        }
+        File_Writer.exportJSON(dealerSet);
+
+    }
+    @FXML
+    private void showLoanedVehicles() throws IOException {
+        StringBuilder result = new StringBuilder("Loaned Vehicles:\n");
+
+        for (Dealer d : dealerSet) {
+            List<Vehicle> loanedVehicles = Loan_Vehicle.getLoanedVehicles(d);
+            if (!loanedVehicles.isEmpty()) {
+                result.append("\nDealer: ").append(d.getDealerName()).append("\n");
+                for (Vehicle v : loanedVehicles) {
+                    result.append("Vehicle").append(v.getVehicleID()).append("\n");
+                }
+            }
+        }
+
+        showAlert(result.toString().isEmpty() ? "No vehicles are currently loaned." : result.toString());
+        File_Writer.exportJSON(dealerSet);
+
+    }
+
 
 
     // Helper methods

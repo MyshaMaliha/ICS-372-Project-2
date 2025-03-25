@@ -13,6 +13,7 @@ public class Loan_Vehicle {
                     return false; //cannot rent sports car
                 }
                 v.setLoaned(true);
+
                 return true;
             }
         }
