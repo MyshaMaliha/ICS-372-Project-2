@@ -7,60 +7,6 @@ import java.util.Set;
  * transfers inventory from one dealer to another
  */
 public class InventoryTransfer {
-    public void transferInventory(Set<Dealer> dealerSet){
-        Scanner s = new Scanner(System.in);
-
-        // getting input for dealer transferring to
-        System.out.println("Enter dealer ID transferring to: ");
-        String dealerIdTo = s.next();
-        Dealer dealerTo = findDealer(dealerIdTo, dealerSet);
-
-        // validating if dealer exists
-        if(dealerTo == null){
-            System.out.println("Not a Valid dealer");
-            return;
-        }
-
-        // getting input for dealer transferring from
-        System.out.println("Enter dealer ID transferring from: ");
-        String dealerIdFrom = s.next();
-        Dealer dealerFrom = findDealer(dealerIdFrom, dealerSet);
-
-        // validating if dealer exists
-        if(dealerFrom == null){
-            System.out.println("Not a Valid dealer");
-            return;
-        }
-
-        boolean continueTransfer = true;
-
-        while (continueTransfer) {
-            System.out.println("Enter Vehicle ID:");
-            String vehicleID = s.next();
-
-            Vehicle vehicleToTransfer = findVehicleById(dealerFrom, vehicleID);
-
-            if (vehicleToTransfer != null) {
-                dealerFrom.removeVehicle(vehicleToTransfer);
-                dealerTo.addVehicle(vehicleToTransfer);
-                System.out.println("Vehicle " + vehicleID + " successfully transferred.");
-            } else {
-                System.out.println("Error: Vehicle ID not found.");
-            }
-
-            System.out.println("Do you want to add another vehicle? (yes/no):");
-            String response = s.next().toLowerCase();
-
-            if (response.equals("no")) {
-                continueTransfer = false;
-                System.out.println("Transfer is done!.");
-            }
-        }
-
-
-
-
-    }
 
     /**
      * helper method that returns the dealerId from the set given to
@@ -69,7 +15,7 @@ public class InventoryTransfer {
      * @param dealerSet the set of dealers used to search for the dealer
      * @return the dealer that matches the dealerId, or null if not found
      */
-    private Dealer findDealer(String dealerID, Set<Dealer> dealerSet){
+    public Dealer findDealer(String dealerID, Set<Dealer> dealerSet){
         for(Dealer dealer: dealerSet){
             if(dealer.getDealerID().equals(dealerID)){
                 return dealer;
@@ -86,7 +32,7 @@ public class InventoryTransfer {
      * @return the vehicle that matches the vehicleID, or null if not found
      */
 
-    private Vehicle findVehicleById(Dealer dealer, String vehicleID) {
+    public Vehicle findVehicleById(Dealer dealer, String vehicleID) {
         for (Vehicle v : dealer.getVehicleList()) {
             if (v.getVehicleID().equals(vehicleID)) {
                 return v;

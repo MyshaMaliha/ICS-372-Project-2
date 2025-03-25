@@ -11,15 +11,6 @@
   }, {
     "dealership_id" : "12513",
     "dealer_name" : "maida",
-    "vehicle_type" : "sedan",
-    "vehicle_manufacturer" : "Tesla",
-    "vehicle_model" : "Model 3",
-    "vehicle_id" : "83883",
-    "price" : 50444.0,
-    "acquisition_date" : 1515354694451
-  }, {
-    "dealership_id" : "12513",
-    "dealer_name" : "maida",
     "vehicle_type" : "pickup",
     "vehicle_manufacturer" : "Chevy",
     "vehicle_model" : "Silverado",
@@ -62,6 +53,15 @@
     "vehicle_id" : "ern222",
     "price" : 22330.0,
     "acquisition_date" : 0
+  }, {
+    "dealership_id" : "485",
+    "dealer_name" : "Wacky Bob’s Automall",
+    "vehicle_type" : "sedan",
+    "vehicle_manufacturer" : "Tesla",
+    "vehicle_model" : "Model 3",
+    "vehicle_id" : "83883",
+    "price" : 50444.0,
+    "acquisition_date" : 1515354694451
   }, {
     "dealership_id" : "77338",
     "dealer_name" : "",

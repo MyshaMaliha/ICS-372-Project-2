@@ -15,16 +15,16 @@ public class GUIController {
     private final String FILE_NAME = "Dealers_Vehicles.json";
 
     @FXML
-    public void initialize(){  //JAVAFX will call initialize() method  before displaying the GUI
+    public void initialize() {  //JAVAFX will call initialize() method  before displaying the GUI
         File file = new File(FILE_NAME);
-        if(file.exists()){
+        if (file.exists()) {
             System.out.println("Loading dealership data...");
-        try{
-            File_Reader.readFile(FILE_NAME, dealerSet);
-        }catch (IOException e){
-            showAlert("Error loading the file: " +e.getMessage());
-        }
-        }else{
+            try {
+                File_Reader.readFile(FILE_NAME, dealerSet);
+            } catch (IOException e) {
+                showAlert("Error loading the file: " + e.getMessage());
+            }
+        } else {
             System.out.println("existing file is empty not found");
         }
     }
@@ -32,16 +32,16 @@ public class GUIController {
     @FXML
     private void checkDealers() {   //printing each dealer and it's vehicle record
         StringBuilder result = new StringBuilder();
-        for(Dealer d: dealerSet){
+        for (Dealer d : dealerSet) {
             result.append("---Dealer : ").append(d.getDealerID()).append(" ---\n");
             result.append("---Dealer Name : ").append(d.getDealerName()).append(" ---\n");
 
-            for(Vehicle v: d.getVehicleList()){
+            for (Vehicle v : d.getVehicleList()) {
                 result.append("Vehicle ID : ").append(v.getVehicleID()).append("\nModel: ").append((v.getModel())).append("\n");
             }
             result.append("\n");
         }
-        showAlert2(result.toString().isEmpty()? "No delaers found." : result.toString());
+        showAlert2(result.toString().isEmpty() ? "No delaers found." : result.toString());
         /*
         for (Dealer d : dealerSet) {
             result.append("\n--- Dealer ").append(d.getDealerID()).append(" ---\n");
@@ -104,11 +104,9 @@ public class GUIController {
 
 
         //Apply Styles to Dialog Pane
-        DialogPane dialogPane =alert.getDialogPane();
+        DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         dialogPane.getStyleClass().add("dialog-pane");
-
-
 
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -122,52 +120,52 @@ public class GUIController {
     }
 
 
-     private void handleFileInput() {
-         String filePath = getUserInput("Enter desired file path:");
-         if (filePath != null && !filePath.trim().isEmpty()) {
-             try {
-                 File_Reader.readFile(filePath, dealerSet);
-             } catch (IOException e) {
-                 showAlert("Error loading file: " + e.getMessage());
-             }
-             showAlert("Vehicles loaded from file.");
-         } else {
-             showAlert("Invalid file path.");
-         }
-     }
+    private void handleFileInput() {
+        String filePath = getUserInput("Enter desired file path:");
+        if (filePath != null && !filePath.trim().isEmpty()) {
+            try {
+                File_Reader.readFile(filePath, dealerSet);
+            } catch (IOException e) {
+                showAlert("Error loading file: " + e.getMessage());
+            }
+            showAlert("Vehicles loaded from file.");
+        } else {
+            showAlert("Invalid file path.");
+        }
+    }
 
-     private void handleManualInput() {
-         String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
-         if (dealerID == null) return;
+    private void handleManualInput() {
+        String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
+        if (dealerID == null) return;
 
-         Dealer selectedDealer = null;
-         for (Dealer d : dealerSet) {
-             if (d.getDealerID().equals(dealerID)) {
-                 selectedDealer = d;
-                 break;
-             }
-         }
-         if (selectedDealer == null) {
-             showAlert("Dealer ID not found.");
-             return;
-         }
-         if (!selectedDealer.getIsAcquisitionEnabled()) {
-             showAlert("Dealer Disabled");
-         } else {
-             String id = getUserInput("Enter Vehicle ID:");
-             String manufacturer = getUserInput("Enter manufacturer:");
-             String model = getUserInput("Enter Model:");
-             long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
-             double price = Double.parseDouble(getUserInput("Enter price:"));
-             String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
+        Dealer selectedDealer = null;
+        for (Dealer d : dealerSet) {
+            if (d.getDealerID().equals(dealerID)) {
+                selectedDealer = d;
+                break;
+            }
+        }
+        if (selectedDealer == null) {
+            showAlert("Dealer ID not found.");
+            return;
+        }
+        if (!selectedDealer.getIsAcquisitionEnabled()) {
+            showAlert("Dealer Disabled");
+        } else {
+            String id = getUserInput("Enter Vehicle ID:");
+            String manufacturer = getUserInput("Enter manufacturer:");
+            String model = getUserInput("Enter Model:");
+            long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
+            double price = Double.parseDouble(getUserInput("Enter price:"));
+            String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
 
-             Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price);
-             boolean added = selectedDealer.addVehicle(newVehicle);
-             if (added) {
-                 showAlert("Vehicle added successfully to dealer" + dealerID);
-             }
-         }
-     }
+            Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price);
+            boolean added = selectedDealer.addVehicle(newVehicle);
+            if (added) {
+                showAlert("Vehicle added successfully to dealer" + dealerID);
+            }
+        }
+    }
 
     @FXML
     private void updateDealerName() {
@@ -194,8 +192,51 @@ public class GUIController {
         }
         showAlert("Exported JSON file successfully.");
     }
+
     @FXML
-    private void transferInventory(){
+    private void transferInventory() throws IOException{
+        InventoryTransfer iT = new InventoryTransfer();
+        if (dealerSet.isEmpty()) {
+            showAlert("No dealers available for transfer.");
+            return;
+        }
+
+        String dealerIdFrom = getUserInput("Enter Dealer ID transferring from:");
+        if (dealerIdFrom == null) return;
+
+        String dealerIdTo = getUserInput("Enter Dealer ID transferring to:");
+        if (dealerIdTo == null) return;
+
+        Dealer dealerFrom = iT.findDealer(dealerIdFrom, dealerSet);
+        Dealer dealerTo = iT.findDealer(dealerIdTo, dealerSet);
+
+        if (dealerFrom == null || dealerTo == null) {
+            showAlert("One or both Dealer IDs are invalid.");
+            return;
+        }
+
+        if (dealerFrom.getVehicleList().isEmpty()) {
+            showAlert("Dealer " + dealerIdFrom + " has no vehicles to transfer.");
+            return;
+        }
+
+        String vehicleId = getUserInput("Enter Vehicle ID to transfer:");
+        if (vehicleId == null) return;
+
+        Vehicle vehicle = iT.findVehicleById(dealerFrom, vehicleId);
+        if (vehicle == null) {
+            showAlert("Vehicle ID not found.");
+            return;
+        }
+
+        // Perform transfer
+        dealerFrom.removeVehicle(vehicle);
+        dealerTo.addVehicle(vehicle);
+        showAlert("Vehicle " + vehicleId + " successfully transferred from " +
+                dealerIdFrom + " to " + dealerIdTo + ".");
+
+        File_Writer.exportJSON(dealerSet);
+
 
     }
 
