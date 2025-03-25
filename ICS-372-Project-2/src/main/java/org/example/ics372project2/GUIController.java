@@ -36,6 +36,7 @@ public class GUIController {
         for (Dealer d : dealerSet) {
             result.append("---Dealer : ").append(d.getDealerID()).append(" ---\n");
             result.append("---Dealer Name : ").append(d.getDealerName()).append(" ---\n");
+            result.append("---AcquisitionEnabled:  ").append(d.getIsAcquisitionEnabled()).append("---\n");
 
             for (Vehicle v : d.getVehicleList()) {
                 result.append("Vehicle ID : ").append(v.getVehicleID()).append("\nModel: ").append((v.getModel())).append("\n");
@@ -48,7 +49,7 @@ public class GUIController {
     }
 
     @FXML
-    private void enableDealer() {
+    private void enableDealer() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to Enable:");
         if (dealerID == null) return;
 
@@ -58,14 +59,16 @@ public class GUIController {
                 d.enableAcquisition();
                 showAlert("Dealer " + dealerID + " is now enabled.");
                 found = true;
+                File_Writer.exportJSON(dealerSet);
                 break;
             }
         }
         if (!found) showAlert("Dealer ID not found.");
+
     }
 
     @FXML
-    private void disableDealer() {
+    private void disableDealer() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to Disable:");
         if (dealerID == null) return;
 
@@ -75,10 +78,12 @@ public class GUIController {
                 d.disableAcquisition();
                 showAlert("Dealer " + dealerID + " is now disabled.");
                 found = true;
+                File_Writer.exportJSON(dealerSet);
                 break;
             }
         }
         if (!found) showAlert("Dealer ID not found.");
+
     }
 
     @FXML

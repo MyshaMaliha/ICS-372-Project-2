@@ -8,7 +8,7 @@ public class Dealer {
     private boolean isAcquisitionEnabled;
     private List<Vehicle> vehicleList;
 
-    public Dealer(String dealerID) {
+    public Dealer(String dealerID) {  //initially all dealer's isAcquisition is TRUE
         this.dealerID = dealerID;
         this.dealerName = "";
         this.vehicleList = new ArrayList<>();
@@ -43,8 +43,11 @@ public class Dealer {
     public boolean getIsAcquisitionEnabled() {
         return isAcquisitionEnabled;
     }
+    public void setAcquisitionEnabled(boolean isAcquisitionEnabled){
+        this.isAcquisitionEnabled = isAcquisitionEnabled;
+    }
 
-    public String getDealerName() {
+        public String getDealerName() {
         return dealerName;
     }
 

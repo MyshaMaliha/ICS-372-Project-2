@@ -2,6 +2,7 @@
   "car_inventory" : [ {
     "dealership_id" : "12513",
     "dealer_name" : "maida",
+    "is_acquisition_enabled" : false,
     "vehicle_type" : "suv",
     "vehicle_manufacturer" : "Ford",
     "vehicle_model" : "Explorer",
@@ -12,6 +13,7 @@
   }, {
     "dealership_id" : "12513",
     "dealer_name" : "maida",
+    "is_acquisition_enabled" : false,
     "vehicle_type" : "pickup",
     "vehicle_manufacturer" : "Chevy",
     "vehicle_model" : "Silverado",
@@ -22,6 +24,7 @@
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "suv",
     "vehicle_manufacturer" : "Land Rover",
     "vehicle_model" : "Range Rover",
@@ -32,6 +35,7 @@
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "pickup",
     "vehicle_manufacturer" : "Toyota",
     "vehicle_model" : "Tundra",
@@ -42,6 +46,7 @@
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "sedan",
     "vehicle_manufacturer" : "Genesis",
     "vehicle_model" : "G70",
@@ -52,6 +57,7 @@
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "sports car",
     "vehicle_manufacturer" : "Mazda",
     "vehicle_model" : "Miata",
@@ -62,6 +68,7 @@
   }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "sedan",
     "vehicle_manufacturer" : "Tesla",
     "vehicle_model" : "Model 3",
@@ -72,6 +79,7 @@
   }, {
     "dealership_id" : "77338",
     "dealer_name" : "",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "sports car",
     "vehicle_manufacturer" : "Toyota",
     "vehicle_model" : "Supra",
@@ -82,6 +90,7 @@
   }, {
     "dealership_id" : "77338",
     "dealer_name" : "",
+    "is_acquisition_enabled" : true,
     "vehicle_type" : "sports car",
     "vehicle_manufacturer" : "Toyota",
     "vehicle_model" : "Supra",

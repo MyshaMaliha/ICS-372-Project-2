@@ -12,6 +12,8 @@ import java.util.Set;
 public class JSONReader extends File_Reader {
     private String filePath;
 
+
+
     public JSONReader(String filePath) {
         this.filePath = filePath;
     }
@@ -51,6 +53,13 @@ public class JSONReader extends File_Reader {
                 else{
                     dealerName = "";
                 }
+                boolean isAcquisitionEnabled;
+                if(vehicle.containsKey("is_acquisition_enabled")){
+                    isAcquisitionEnabled = (boolean) vehicle.get("is_acquisition_enabled");
+                }else{
+                    isAcquisitionEnabled = true;
+                }
+
                 String dealershipID = (String) vehicle.get("dealership_id");
                 String manufacturer = (String) vehicle.get("vehicle_manufacturer");
                 String model = (String) vehicle.get("vehicle_model");
@@ -69,7 +78,9 @@ public class JSONReader extends File_Reader {
                 boolean found = false;
                 for (Dealer d : dealerSet) {
                     if (d.getDealerID().equals(dealershipID)) {
-                        d.addVehicle(newVehicle);
+                        d.getVehicleList().add(newVehicle);  //Temporary bypass "isAcquisitionEnabled" to ensure all JSON vehicles load
+                        d.setDealerName(dealerName);
+                        d.setAcquisitionEnabled(isAcquisitionEnabled);
                         found = true;
                         break;
                     }
@@ -77,9 +88,10 @@ public class JSONReader extends File_Reader {
                 if (!found) {
                     Dealer d = new Dealer(dealershipID);
                     if(dealerName.length()>0){
-                        d.setDealerName(dealerName);}
-
-                    d.addVehicle(newVehicle);
+                        d.setDealerName(dealerName);
+                    }
+                    d.getVehicleList().add(newVehicle);  //Temporary bypass "isAcquisitionEnabled" to ensure all JSON vehicles load
+                    d.setAcquisitionEnabled(isAcquisitionEnabled);  //Correctly set from JSON
                     dealerSet.add(d);
                 }
             }

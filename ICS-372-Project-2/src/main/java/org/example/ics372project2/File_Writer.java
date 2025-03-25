@@ -24,6 +24,7 @@ public class File_Writer {
                 Map<String, Object> vehicleData = new LinkedHashMap<>();     //Stores each  attribute of a vehicle as a Map(key-value pairs)
                 vehicleData.put("dealership_id", d.getDealerID());    // HashMap.put("key", value) | assuming getDealerID() exists
                 vehicleData.put("dealer_name", d.getDealerName());    // Add the dealer name here
+                vehicleData.put("is_acquisition_enabled", d.getIsAcquisitionEnabled());
                 vehicleData.put("vehicle_type", v.getType());
                 vehicleData.put("vehicle_manufacturer", v.getManufacturer());
                 vehicleData.put("vehicle_model", v.getModel());
