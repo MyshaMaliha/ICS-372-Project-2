@@ -1,16 +1,5 @@
 {
   "car_inventory" : [ {
-    "dealership_id" : "12513",
-    "dealer_name" : "",
-    "is_acquisition_enabled" : false,
-    "vehicle_type" : "suv",
-    "vehicle_manufacturer" : "Ford",
-    "vehicle_model" : "Explorer",
-    "vehicle_id" : "48934j",
-    "price" : 20123.0,
-    "acquisition_date" : 1515354694451,
-    "is_loaned" : false
-  }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
     "is_acquisition_enabled" : true,
@@ -44,17 +33,6 @@
     "acquisition_date" : 0,
     "is_loaned" : false
   }, {
-    "dealership_id" : "485",
-    "dealer_name" : "Wacky Bob’s Automall",
-    "is_acquisition_enabled" : true,
-    "vehicle_type" : "sports car",
-    "vehicle_manufacturer" : "Mazda",
-    "vehicle_model" : "Miata",
-    "vehicle_id" : "ern222",
-    "price" : 22330.0,
-    "acquisition_date" : 0,
-    "is_loaned" : false
-  }, {
     "dealership_id" : "77338",
     "dealer_name" : "",
     "is_acquisition_enabled" : true,
@@ -64,6 +42,17 @@
     "vehicle_id" : "229393",
     "price" : 49889.0,
     "acquisition_date" : 1515354694451,
+    "is_loaned" : false
+  }, {
+    "dealership_id" : "77338",
+    "dealer_name" : "",
+    "is_acquisition_enabled" : true,
+    "vehicle_type" : "sports car",
+    "vehicle_manufacturer" : "Mazda",
+    "vehicle_model" : "Miata",
+    "vehicle_id" : "ern222",
+    "price" : 22330.0,
+    "acquisition_date" : 0,
     "is_loaned" : false
   } ]
 }
