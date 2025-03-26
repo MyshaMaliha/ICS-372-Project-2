@@ -9,8 +9,14 @@ import java.util.*;
 public class File_Writer {
 
     /**
-     * @param dealerSet
-     * @throws IOException
+     * Exports the dealer inventory data into "Dealers_Vehicle.json" File
+     * the JSON File contains a structured inventory of all vehicles categorized by dealership
+     *
+     * <p> This method iterates through the provided set of dealers, extract vehicle details and organize them into a structured JSON File.
+     * Each vehicle record includes dealership details, vehicle type, manufacturer, model, price, acquisition date, loaned status.</p>
+     *
+     * @param dealerSet (the set of dealers whose inventory will be exported)
+     * @throws IOException (if error occurs while writing the JSON File)
      */
     static void exportJSON(Set<Dealer> dealerSet) throws IOException {
         ObjectMapper objMap = new ObjectMapper();               //Used to convert JAVA obj into JSON

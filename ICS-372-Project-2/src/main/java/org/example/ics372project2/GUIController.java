@@ -15,8 +15,16 @@ public class GUIController {
     private Set<Dealer> dealerSet = new HashSet<>();
     private final String FILE_NAME = "Dealers_Vehicles.json";
 
+    public void setDealerSet(Set<Dealer> dealerSet){
+        this.dealerSet= dealerSet;
+    }
+
+    /**
+     * Initializes the GUI by loading dealership data from file Dealer_Vehicle.json if it exists.
+     * This method is automatically called by JAVAFX before displaying the GUI
+     */
     @FXML
-    public void initialize() {  //JAVAFX will call initialize() method  before displaying the GUI
+    public void initialize() {
         File file = new File(FILE_NAME);
         if (file.exists()) {
             System.out.println("Loading dealership data...");
@@ -30,6 +38,9 @@ public class GUIController {
         }
     }
 
+    /**
+     * Display all dealers and their vehicle List in an alert window.
+     */
     @FXML
     private void checkDealers() {   //printing each dealer and it's vehicle record
         StringBuilder result = new StringBuilder();
@@ -48,6 +59,11 @@ public class GUIController {
 
     }
 
+    /**
+     * Enable acquisition for a dealer identifies by user input
+     * updates the JSON file upon success
+     * @throws IOException if error occurs during file writing
+     */
     @FXML
     private void enableDealer() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to Enable:");
@@ -67,6 +83,11 @@ public class GUIController {
 
     }
 
+    /**
+     *Disable acquisition for a dealer identifies by  user input
+     * updates the JSON file upon success
+     * @throws IOException if an error occurs during writing the file
+     */
     @FXML
     private void disableDealer() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to Disable:");
@@ -86,6 +107,9 @@ public class GUIController {
 
     }
 
+    /**
+     * prompts the user to choose between manual or file-based vehicle entry
+     */
     @FXML
     private void addVehicle() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -118,6 +142,9 @@ public class GUIController {
     }
 
 
+    /**
+     * Reads vehicle data from a file given by the user and updates the dealership records.
+     */
     private void handleFileInput() {
         String filePath = getUserInput("Enter desired file path:");
         if (filePath != null && !filePath.trim().isEmpty()) {
@@ -133,6 +160,7 @@ public class GUIController {
             showAlert("Invalid file path.");
         }
     }
+
 
     private void handleManualInput()  {
         String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
@@ -169,6 +197,11 @@ public class GUIController {
         }
     }
 
+    /**
+     *  Prompts the user for dealer ID and new name, then updates the dealership records
+     *  updates the JSON file upon success
+     * @throws IOException if error occurs while updating the file
+     */
     @FXML
     private void updateDealerName() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID to update name:");
@@ -188,6 +221,10 @@ public class GUIController {
 
     }
 
+    /**
+     * Exports the dealership data to a JSON file.
+     * @throws IOException if error occurs while updating the file
+     */
     @FXML
     private void exportJSON() throws IOException {
         try {
@@ -199,6 +236,11 @@ public class GUIController {
         showAlert("Exported JSON file successfully.");
     }
 
+    /**
+     * transfers vehicle from one dealer to another dealer
+     * updates the JSON file upon success
+     * @throws IOException if error occurs while updating the file
+     */
     @FXML
     private void transferInventory() throws IOException{
         InventoryTransfer iT = new InventoryTransfer();
@@ -246,6 +288,12 @@ public class GUIController {
 
     }
 
+    /**
+     * Loans a vehicle to a dealer based on user input.
+     * Prompts the user for a dealer ID and vehicle ID, then processes the loan if valid.
+     * Sports cars cannot be loaned.
+     * @throws IOException if an error occurs during file writing.
+     */
     @FXML
     private void loanVehicle() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID:");
@@ -278,7 +326,11 @@ public class GUIController {
         File_Writer.exportJSON(dealerSet);
 
     }
-
+    /**
+     * Returns a previously loaned vehicle to a dealer.
+     * Prompts the user for a dealer ID and vehicle ID, then processes the return if valid.
+     *@throws IOException if an error occurs during file writing.
+     */
     @FXML
     private void returnVehicle() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID:");
@@ -311,6 +363,11 @@ public class GUIController {
         File_Writer.exportJSON(dealerSet);
 
     }
+    /**
+     * Displays a list of all loaned vehicles across dealers.
+     * Retrieves loaned vehicles from each dealer and shows them in an alert dialog.
+     *@throws IOException if an error occurs during file writing.
+     */
     @FXML
     private void showLoanedVehicles() throws IOException {
         StringBuilder result = new StringBuilder("Loaned Vehicles:\n");
@@ -331,7 +388,10 @@ public class GUIController {
     }
 
 
-
+    /**
+     *  Displays an alert dialog with the given message.
+     * @param message (The message to display in the alert)
+     */
     // Helper methods
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -345,7 +405,11 @@ public class GUIController {
 
         alert.showAndWait();
     }
-
+    /**
+     * Prompts the user for input with a given message.
+     * @param prompt (The prompt message displayed to the user)
+     * @return The user’s input or null if canceled.
+     */
     private String getUserInput(String prompt) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Input Required");
@@ -360,6 +424,7 @@ public class GUIController {
         return result.orElse(null);
     }
         //making a  ScrollPane to make the alert's content scrollable
+
         private void showAlert2(String message) {
             //Create a TextArea with the content
             TextArea textArea = new TextArea(message);

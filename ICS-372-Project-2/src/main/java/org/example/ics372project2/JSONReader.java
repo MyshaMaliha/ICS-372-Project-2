@@ -9,15 +9,23 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * This class reads and parses dealer inventory data from a JSON file
+ * It extends abstract File_Reader and implements the parsing method for JSON File
+ */
 public class JSONReader extends File_Reader {
     private String filePath;
-
-
 
     public JSONReader(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * parses the JSON File and Loads dealer and Vehicle data into the provided dealer set
+     * IF the JSON file is empty or improperly formatted,appropriate message will be shown
+     * @param dealerSet (the set of dealers where parsed data will be stored)
+     * @throws IOException (if errors occurs while reading  the file)
+     */
     @Override
     public void parse(Set<Dealer> dealerSet) throws IOException {
         JSONParser parser = new JSONParser();
