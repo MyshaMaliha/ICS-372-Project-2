@@ -15,9 +15,6 @@ public class GUIController {
     private Set<Dealer> dealerSet = new HashSet<>();
     private final String FILE_NAME = "Dealers_Vehicles.json";
 
-    public void setDealerSet(Set<Dealer> dealerSet){
-        this.dealerSet= dealerSet;
-    }
 
     /**
      * Initializes the GUI by loading dealership data from file Dealer_Vehicle.json if it exists.
@@ -62,6 +59,7 @@ public class GUIController {
     /**
      * Enable acquisition for a dealer identifies by user input
      * updates the JSON file upon success
+     *
      * @throws IOException if error occurs during file writing
      */
     @FXML
@@ -84,8 +82,9 @@ public class GUIController {
     }
 
     /**
-     *Disable acquisition for a dealer identifies by  user input
+     * Disable acquisition for a dealer identifies by  user input
      * updates the JSON file upon success
+     *
      * @throws IOException if an error occurs during writing the file
      */
     @FXML
@@ -108,24 +107,145 @@ public class GUIController {
     }
 
     /**
-     * prompts the user to choose between manual or file-based vehicle entry
+     * add vehicles into the existing or new dealers
+     * @throws IOException if file not write properly
      */
     @FXML
-    private void addVehicle() {
+    private void addVehicle() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("ADD Vehicle");
         alert.setHeaderText("Choose how you want to add a vehicle: ");
         alert.setContentText("Select an option below:");
 
-        //Create Buttons
+        // Create Buttons
+        ButtonType existingDealerButton = new ButtonType("Existing Dealer");
+        ButtonType newDealerButton = new ButtonType("New Dealer");
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(existingDealerButton, newDealerButton, cancelButton);
+
+        // Apply Styles to Dialog Pane
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == existingDealerButton) {
+                handleExistingDealerInput();
+            } else if (result.get() == newDealerButton) {
+                handleNewDealerInput();
+            }
+        } File_Writer.exportJSON(dealerSet);
+    }
+
+    /**
+     * Handles the vehicle addition process for an existing dealer.
+     */
+    private void handleExistingDealerInput() {
+            // Ask whether the user wants to add via file or manual input first
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("ADD Vehicle");
+            alert.setHeaderText("Choose how you want to add a vehicle to the existing dealer:");
+            alert.setContentText("Select an option below:");
+
+            ButtonType manualButton = new ButtonType("Manual");
+            ButtonType fileButton = new ButtonType("File");
+            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(manualButton, fileButton, cancelButton);
+            // Apply Styles to Dialog Pane
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+            dialogPane.getStyleClass().add("dialog-pane");
+
+
+        Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent()) {
+                if (result.get() == fileButton) {
+                    // First, ask how many dealer IDs they want to enter
+                    String numberOfDealersInput = getUserInput("Enter the number of dealers you want to add vehicles to:");
+                    if (numberOfDealersInput == null || numberOfDealersInput.trim().isEmpty()) return;
+
+                    int numberOfDealers = Integer.parseInt(numberOfDealersInput);
+
+                    // Loop through each dealer ID and check if it's valid and enabled
+                    for (int i = 0; i < numberOfDealers; i++) {
+                        String dealerID = getUserInput("Enter Dealer ID " + (i + 1) + ":");
+                        if (dealerID == null || dealerID.trim().isEmpty()) return;
+
+                        Dealer selectedDealer = findDealerByID(dealerID);
+                        if (selectedDealer == null) {
+                            showAlert("Dealer ID " + dealerID + " not found.");
+                            return;
+                        }
+
+                        // Check if the dealer is enabled
+                        if (!selectedDealer.getIsAcquisitionEnabled()) {
+                            showAlert("Dealer " + dealerID + " is disabled. Vehicle cannot be added.");
+                            return; // Stop if any dealer is disabled
+                        }
+                    }
+
+                    // If all dealers are enabled, proceed with file input
+                    handleFileInputForExistingDealer();
+                } else if (result.get() == manualButton) {
+                    // Ask for the dealer ID for manual input
+                    String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
+                    if (dealerID == null) return;
+
+                    Dealer selectedDealer = findDealerByID(dealerID);
+                    if (selectedDealer == null) {
+                        showAlert("Dealer ID not found.");
+                        return;
+                    }
+
+                    // Ask if the dealer is enabled or disabled
+                    if (!selectedDealer.getIsAcquisitionEnabled()) {
+                        showAlert("Dealer is disabled. Vehicle cannot be added.");
+                        return;
+                    }
+
+                    // Process manual input for the selected dealer
+                    handleManualInput(selectedDealer);
+                }
+            }
+        }
+
+    /**
+     * Finds a dealer by its ID in the dealer set.
+     */
+    private Dealer findDealerByID(String dealerID) {
+        for (Dealer dealer : dealerSet) {
+            if (dealer.getDealerID().equals(dealerID)) {
+                return dealer;
+            }
+        }
+        return null;
+    }
+    /**
+     * Handles the vehicle addition process for a new dealer.
+     */
+    private void handleNewDealerInput() {
+        String dealerID = getUserInput("Enter New Dealer ID:");
+        if (dealerID == null) return;
+
+        // Create a new dealer and add it to the dealer set
+        Dealer newDealer = new Dealer(dealerID);
+        dealerSet.add(newDealer);
+
+        // Now ask whether the user wants to add via file or manual input
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("ADD Vehicle");
+        alert.setHeaderText("Choose how you want to add a vehicle to the new dealer:");
+        alert.setContentText("Select an option below:");
+
         ButtonType manualButton = new ButtonType("Manual");
         ButtonType fileButton = new ButtonType("File");
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().setAll(manualButton, fileButton, cancelButton);
-
-
-        //Apply Styles to Dialog Pane
+        // Apply Styles to Dialog Pane
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         dialogPane.getStyleClass().add("dialog-pane");
@@ -134,18 +254,86 @@ public class GUIController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == fileButton) {
-                handleFileInput();
+                handleFileInputForNewDealer(newDealer);
             } else if (result.get() == manualButton) {
-                handleManualInput();
+                handleManualInput(newDealer);
             }
         }
     }
 
+    /**
+     * Reads vehicle data from a file for an existing dealer and updates the dealership records.
+     */
+    private void handleFileInputForExistingDealer() {
+        String numDealersInput = getUserInput("Enter the number of dealers in the file:");
+        if (numDealersInput == null || numDealersInput.trim().isEmpty()) {
+            showAlert("Invalid input for the number of dealers.");
+            return;
+        }
+
+        int numDealers;
+        try {
+            numDealers = Integer.parseInt(numDealersInput);
+        } catch (NumberFormatException e) {
+            showAlert("Please enter a valid number.");
+            return;
+        }
+
+        boolean allDealersEnabled = true;
+
+        for (int i = 0; i < numDealers; i++) {
+            String dealerID = getUserInput("Enter Dealer ID #" + (i + 1) + ":");
+
+            if (dealerID == null || dealerID.trim().isEmpty()) {
+                showAlert("Dealer ID cannot be empty.");
+                allDealersEnabled = false;
+                break;
+            }
+
+            // Check if the dealer exists using an enhanced for loop
+            Dealer dealer = null;
+            for (Dealer d : dealerSet) {
+                if (d.getDealerID().equals(dealerID)) {
+                    dealer = d;
+                    break; // Exit the loop once the dealer is found
+                }
+            }
+
+            if (dealer == null) {
+                showAlert("Dealer ID " + dealerID + " not found.");
+                allDealersEnabled = false;
+                break;  // Stop if the dealer is not found
+            }
+
+            // Check if the dealer is enabled
+            if (!dealer.getIsAcquisitionEnabled()) {
+                showAlert("Dealer " + dealerID + " is disabled. Cannot read the file.");
+                allDealersEnabled = false;
+                break;  // Stop if the dealer is disabled
+            }
+        }
+
+        if (allDealersEnabled) {
+            // If all dealers are enabled, proceed to read the file
+            String filePath = getUserInput("Enter desired file path:");
+            if (filePath != null && !filePath.trim().isEmpty()) {
+                try {
+                    File_Reader.readFile(filePath, dealerSet);  // Assuming this reads and adds vehicles
+                    showAlert("Vehicles loaded from file.");
+                    File_Writer.exportJSON(dealerSet);
+                } catch (IOException e) {
+                    showAlert("Error loading file: " + e.getMessage());
+                }
+            } else {
+                showAlert("Invalid file path.");
+            }
+        }
+    }
 
     /**
-     * Reads vehicle data from a file given by the user and updates the dealership records.
+     * Reads vehicle data from a file for a new dealer and updates the dealership records.
      */
-    private void handleFileInput() {
+    private void handleFileInputForNewDealer(Dealer newDealer) {
         String filePath = getUserInput("Enter desired file path:");
         if (filePath != null && !filePath.trim().isEmpty()) {
             try {
@@ -155,47 +343,33 @@ public class GUIController {
             } catch (IOException e) {
                 showAlert("Error loading file: " + e.getMessage());
             }
-
         } else {
             showAlert("Invalid file path.");
         }
     }
 
+    /**
+     * Handles manual input for adding a vehicle.
+     */
+    private void handleManualInput(Dealer selectedDealer) {
+        String id = getUserInput("Enter Vehicle ID:");
+        String manufacturer = getUserInput("Enter manufacturer:");
+        String model = getUserInput("Enter Model:");
+        long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date (as long value):"));
+        double price = Double.parseDouble(getUserInput("Enter price:"));
+        String type = getUserInput("Enter Vehicle Type (SUV, sedan, Pickup, Sports Car):");
+        boolean isLoaned = Boolean.parseBoolean(getUserInput("Loaned (true/false):"));
 
-    private void handleManualInput()  {
-        String dealerID = getUserInput("Enter Dealer ID to add a vehicle:");
-        if (dealerID == null) return;
-
-        Dealer selectedDealer = null;
-        for (Dealer d : dealerSet) {
-            if (d.getDealerID().equals(dealerID)) {
-                selectedDealer = d;
-                break;
-            }
-        }
-        if (selectedDealer == null) {
-            showAlert("Dealer ID not found.");
-            return;
-        }
-        if (!selectedDealer.getIsAcquisitionEnabled()) {
-            showAlert("Dealer Disabled");
+        Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price, isLoaned);
+        boolean added = selectedDealer.addVehicle(newVehicle);
+        if (added) {
+            showAlert("Vehicle added successfully to dealer " + selectedDealer.getDealerID());
         } else {
-            String id = getUserInput("Enter Vehicle ID:");
-            String manufacturer = getUserInput("Enter manufacturer:");
-            String model = getUserInput("Enter Model:");
-            long acquisitionDate = Long.parseLong(getUserInput("Enter Acquisition Date(as long value):"));
-            double price = Double.parseDouble(getUserInput("Enter price:"));
-            String type = getUserInput("Enter Vehicle Type(SUV, sedan, Pickup, Sports Car):");
-            boolean isLoaned = Boolean.parseBoolean(getUserInput("Loaned(true/false: "));
-
-            Vehicle newVehicle = JSONReader.checkType(type, manufacturer, model, id, acquisitionDate, price, isLoaned);
-            boolean added = selectedDealer.addVehicle(newVehicle);
-            if (added) {
-                showAlert("Vehicle added successfully to dealer" + dealerID);
-            }
-
+            showAlert("Failed to add vehicle.");
         }
     }
+
+/**
 
     /**
      *  Prompts the user for dealer ID and new name, then updates the dealership records

@@ -1,7 +1,7 @@
 {
   "car_inventory" : [ {
     "dealership_id" : "002",
-    "dealer_name" : "",
+    "dealer_name" : "maida",
     "is_acquisition_enabled" : true,
     "vehicle_type" : "sedan",
     "vehicle_manufacturer" : "Toyota",
@@ -9,6 +9,39 @@
     "vehicle_id" : "V-01",
     "price" : 23000.0,
     "acquisition_date" : 0,
+    "is_loaned" : false
+  }, {
+    "dealership_id" : "002",
+    "dealer_name" : "maida",
+    "is_acquisition_enabled" : true,
+    "vehicle_type" : "sedan",
+    "vehicle_manufacturer" : "toyota",
+    "vehicle_model" : "camry",
+    "vehicle_id" : "005",
+    "price" : 5667.0,
+    "acquisition_date" : 566788,
+    "is_loaned" : true
+  }, {
+    "dealership_id" : "003",
+    "dealer_name" : "",
+    "is_acquisition_enabled" : true,
+    "vehicle_type" : "sedan",
+    "vehicle_manufacturer" : "TOYOTA",
+    "vehicle_model" : "camry",
+    "vehicle_id" : "335",
+    "price" : 8000.0,
+    "acquisition_date" : 3445322,
+    "is_loaned" : false
+  }, {
+    "dealership_id" : "003",
+    "dealer_name" : "",
+    "is_acquisition_enabled" : true,
+    "vehicle_type" : "sedan",
+    "vehicle_manufacturer" : "toyota",
+    "vehicle_model" : "camry",
+    "vehicle_id" : "3445",
+    "price" : 8999.0,
+    "acquisition_date" : 3456332,
     "is_loaned" : false
   } ]
 }
