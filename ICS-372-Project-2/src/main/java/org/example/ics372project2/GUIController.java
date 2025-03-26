@@ -242,48 +242,43 @@ public class GUIController {
      * @throws IOException if error occurs while updating the file
      */
     @FXML
+
     private void transferInventory() throws IOException{
         InventoryTransfer iT = new InventoryTransfer();
-        if (dealerSet.isEmpty()) {
+
+        if(dealerSet.isEmpty()){
             showAlert("No dealers available for transfer.");
             return;
         }
 
-        String dealerIdFrom = getUserInput("Enter Dealer ID transferring from:");
-        if (dealerIdFrom == null) return;
+        boolean continueToTransfer = true;
 
-        String dealerIdTo = getUserInput("Enter Dealer ID transferring to:");
-        if (dealerIdTo == null) return;
+        while(continueToTransfer){
+            // asks the user input for dealer IDs and Vehicle ID
+            String dealerIdFrom = getUserInput("Enter dealer ID transferring from");
+            if (dealerIdFrom == null) return;
+            String dealerIdTo = getUserInput("Enter dealer ID transferring to");
+            if (dealerIdTo == null) return;
 
-        Dealer dealerFrom = iT.findDealer(dealerIdFrom, dealerSet);
-        Dealer dealerTo = iT.findDealer(dealerIdTo, dealerSet);
+            String vehicleId = getUserInput("Enter Vehicle ID to transfer:");
+            if (vehicleId == null) return;
 
-        if (dealerFrom == null || dealerTo == null) {
-            showAlert("One or both Dealer IDs are invalid.");
-            return;
+            // call the transferVehicle method to transfer.
+            boolean success = iT.transferVehicle(dealerSet, dealerIdFrom, dealerIdTo, vehicleId);
+
+            // if it did not transfer, print error message
+            if (!success) {
+                showAlert("Transfer failed. Please check your inputs and try again.");
+            }
+
+            // asks the user if they want to transfer another vehicle
+            String response = getUserInput("Do you want to transfer another vehicle? (yes/no)");
+            if (response == null || !response.equalsIgnoreCase("yes")) {
+                continueToTransfer = false;
+            }
+
+
         }
-
-        if (dealerFrom.getVehicleList().isEmpty()) {
-            showAlert("Dealer " + dealerIdFrom + " has no vehicles to transfer.");
-            return;
-        }
-
-        String vehicleId = getUserInput("Enter Vehicle ID to transfer:");
-        if (vehicleId == null) return;
-
-        Vehicle vehicle = iT.findVehicleById(dealerFrom, vehicleId);
-        if (vehicle == null) {
-            showAlert("Vehicle ID not found.");
-            return;
-        }
-
-        // Perform transfer
-        dealerFrom.removeVehicle(vehicle);
-        dealerTo.addVehicle(vehicle);
-        showAlert("Vehicle " + vehicleId + " successfully transferred from " +
-                dealerIdFrom + " to " + dealerIdTo + ".");
-
-        File_Writer.exportJSON(dealerSet);
 
 
     }
