@@ -1,57 +1,13 @@
 {
   "car_inventory" : [ {
-    "dealership_id" : "485",
-    "dealer_name" : "Wacky Bob’s Automall",
-    "is_acquisition_enabled" : true,
-    "vehicle_type" : "suv",
-    "vehicle_manufacturer" : "Land Rover",
-    "vehicle_model" : "Range Rover",
-    "vehicle_id" : "848432",
-    "price" : 17000.0,
-    "acquisition_date" : 0,
-    "is_loaned" : true
-  }, {
-    "dealership_id" : "485",
-    "dealer_name" : "Wacky Bob’s Automall",
-    "is_acquisition_enabled" : true,
-    "vehicle_type" : "pickup",
-    "vehicle_manufacturer" : "Toyota",
-    "vehicle_model" : "Tundra",
-    "vehicle_id" : "52523",
-    "price" : 22600.0,
-    "acquisition_date" : 0,
-    "is_loaned" : false
-  }, {
-    "dealership_id" : "485",
-    "dealer_name" : "Wacky Bob’s Automall",
+    "dealership_id" : "002",
+    "dealer_name" : "",
     "is_acquisition_enabled" : true,
     "vehicle_type" : "sedan",
-    "vehicle_manufacturer" : "Genesis",
-    "vehicle_model" : "G70",
-    "vehicle_id" : "151e5dde",
-    "price" : 36600.0,
-    "acquisition_date" : 0,
-    "is_loaned" : false
-  }, {
-    "dealership_id" : "77338",
-    "dealer_name" : "",
-    "is_acquisition_enabled" : true,
-    "vehicle_type" : "sports car",
     "vehicle_manufacturer" : "Toyota",
-    "vehicle_model" : "Supra",
-    "vehicle_id" : "229393",
-    "price" : 49889.0,
-    "acquisition_date" : 1515354694451,
-    "is_loaned" : false
-  }, {
-    "dealership_id" : "77338",
-    "dealer_name" : "",
-    "is_acquisition_enabled" : true,
-    "vehicle_type" : "sports car",
-    "vehicle_manufacturer" : "Mazda",
-    "vehicle_model" : "Miata",
-    "vehicle_id" : "ern222",
-    "price" : 22330.0,
+    "vehicle_model" : "Camry",
+    "vehicle_id" : "V-01",
+    "price" : 23000.0,
     "acquisition_date" : 0,
     "is_loaned" : false
   } ]

@@ -1,7 +1,6 @@
 package org.example.ics372project2;
 
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -76,9 +75,9 @@ public class InventoryTransfer {
     /**
      * helper method that returns the Vehicle from dealer set given
      *
-     * @param dealer the set of dealers used to search for the dealer
-     * @param vehicleID the vehicle ID of the vehicle that needs to be found
-     * @return the vehicle that matches the vehicleID, or null if not found
+     * @param dealer the dealer whose vehicles will be searched
+     * @param vehicleID the vehicle ID to find
+     * @return the vehicle if found, otherwise null
      */
 
     public Vehicle findVehicleById(Dealer dealer, String vehicleID) {
