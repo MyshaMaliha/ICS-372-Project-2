@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+actor "System" as S
+participant "File" as F
+participant "File_Reader" as FR
+participant "Dealer Set" as DS
+participant "GUI" as G
+
+S -> F : Check if FILE_NAME exists
+alt File Exists
+    S -> G : Display "Loading dealership data..."
+    S -> FR : readFile(FILE_NAME, dealerSet)
+    FR -> DS : Populate dealerSet with data
+    FR -> G : Load data into GUI
+else File Does Not Exist
+    S -> G : Display "Existing file is empty or not found"
+end
+@enduml

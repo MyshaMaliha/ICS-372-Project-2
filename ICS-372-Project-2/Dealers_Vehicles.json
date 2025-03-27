@@ -2,7 +2,7 @@
   "car_inventory" : [ {
     "dealership_id" : "002",
     "dealer_name" : "maida",
-    "is_acquisition_enabled" : true,
+    "is_acquisition_enabled" : false,
     "vehicle_type" : "sedan",
     "vehicle_manufacturer" : "Toyota",
     "vehicle_model" : "Camry",
@@ -13,7 +13,7 @@
   }, {
     "dealership_id" : "002",
     "dealer_name" : "maida",
-    "is_acquisition_enabled" : true,
+    "is_acquisition_enabled" : false,
     "vehicle_type" : "sedan",
     "vehicle_manufacturer" : "toyota",
     "vehicle_model" : "camry",
