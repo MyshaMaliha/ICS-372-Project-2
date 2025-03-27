@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor User
+participant "XMLReader" as XR
+participant "File" as F
+participant "DocumentBuilderFactory" as DBF
+participant "DocumentBuilder" as DB
+participant "Document" as DOC
+participant "Dealer" as D
+participant "Vehicle" as V
+
+User -> XR : parse(dealerSet)
+XR -> F : Open XML file
+XR -> DBF : Create DocumentBuilderFactory
+DBF -> DB : Create DocumentBuilder
+DB -> DOC : Parse XML file
+
+loop for each Dealer node
+    XR -> DOC : Get Dealer nodes
+    XR -> DOC : Extract Dealer ID
+    alt Dealer ID missing
+        XR -> User : Show error and stop
+    end
+    XR -> D : getOrCreateDealer(dealerID, dealerSet)
+
+    loop for each Vehicle node in Dealer
+        XR -> DOC : Get Vehicle attributes (type, ID)
+        alt Missing type or ID
+            XR -> User : Show error and stop
+        end
+        XR -> DOC : Extract additional data (Make, Model, Price, is_loaned)
+        XR -> V : checkType(type, manufacturer, model, vehicleID, ...)
+        alt Valid vehicle type
+            XR -> D : addVehicle(vehicle)
+        else Unknown vehicle type
+            XR -> User : Show warning
+        end
+    end
+end
+XR -> User : Parsing completed
+
+
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor User
+participant "Dealer Set" as DS
+participant "Dealer" as D
+participant "Loan_Vehicle" as LV
+participant "Vehicle" as V
+participant "File_Writer" as FW
+
+User -> DS : Get Dealer by ID
+DS -> D : Find Dealer
+alt Dealer Found
+    User -> D : Get Vehicle by ID
+    D -> V : Find Vehicle
+    alt Vehicle Found
+        User -> LV : loanVehicle(dealer, vehicleID)
+        LV -> V : Check if Sports Car
+        alt Is Sports Car
+            LV -> User : Show error (Cannot Loan Sports Car)
+        else Not Sports Car
+            LV -> V : Set Loaned = True
+            LV -> User : Confirm Loan Success
+            LV -> FW : exportJSON(dealerSet)
+        end
+    else Vehicle Not Found
+        LV -> User : Show error (Vehicle ID not found)
+    end
+else Dealer Not Found
+    LV -> User : Show error (Dealer ID not found)
+end
+
+@enduml
