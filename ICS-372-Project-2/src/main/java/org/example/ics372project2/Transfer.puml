@@ -1,0 +1,48 @@
+@@startuml
+ actor User
+
+ participant "GUI" as GUI
+ participant "InventoryTransfer" as IT
+ participant "DealerFrom: Dealer" as DF
+ participant "DealerTo: Dealer" as DT
+ participant "Vehicle" as V
+ participant "File_Writer" as FW
+
+ User -> GUI : clicks "Transfer Inventory"
+ GUI -> User : asks dealerIdFrom, dealerIdTo, vehicleId
+ User -> GUI : inputs dealer IDs and vehicle ID
+
+ GUI -> IT : transferVehicle(dealerSet, dealerIdFrom, dealerIdTo, vehicleId)
+
+ IT -> IT : findDealer(dealerIdFrom, dealerSet)
+ IT -> IT : findDealer(dealerIdTo, dealerSet)
+
+ alt dealerFrom or dealerTo is null
+     IT -> GUI : show error message
+     return
+ end
+
+ IT -> DF : getVehicleList()
+ alt vehicle list empty
+     IT -> GUI : show error (no vehicles to transfer)
+     return
+ end
+
+ alt dealerIdFrom equals dealerIdTo
+     IT -> GUI : show error (cannot transfer to same dealer)
+     return
+ end
+
+ IT -> IT : findVehicleById(DF, vehicleId)
+ alt vehicle not found
+     IT -> GUI : show error (vehicle not found)
+     return
+ end
+
+ IT -> DF : removeVehicle(vehicle)
+ IT -> DT : addVehicle(vehicle)
+ IT -> FW : exportJSON(dealerSet)
+
+ IT -> GUI : show success message
+
+ @enduml

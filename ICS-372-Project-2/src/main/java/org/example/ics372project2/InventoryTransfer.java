@@ -57,7 +57,7 @@ public class InventoryTransfer {
 
 
     /**
-     * helper method that returns the dealerId from the set given to
+     *  method that returns the dealerId from the set given to
      * find a dealer that matches the id
      * @param dealerID the dealer ID of the dealer that needs to be found
      * @param dealerSet the set of dealers used to search for the dealer
@@ -73,7 +73,7 @@ public class InventoryTransfer {
     }
 
     /**
-     * helper method that returns the Vehicle from dealer set given
+     *  method that returns the Vehicle from dealer set given
      *
      * @param dealer the dealer whose vehicles will be searched
      * @param vehicleID the vehicle ID to find
