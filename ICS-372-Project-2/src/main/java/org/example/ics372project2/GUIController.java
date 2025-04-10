@@ -467,7 +467,6 @@ public class GUIController {
     private void loanVehicle() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID:");
         if (dealerID == null || dealerID.trim().isEmpty()) {
-            showAlert("Dealer ID cannot be empty.");
             return;
         }
 
@@ -504,7 +503,7 @@ public class GUIController {
     private void returnVehicle() throws IOException {
         String dealerID = getUserInput("Enter Dealer ID:");
         if (dealerID == null || dealerID.trim().isEmpty()) {
-            showAlert("Dealer ID cannot be empty.");
+
             return;
         }
 
