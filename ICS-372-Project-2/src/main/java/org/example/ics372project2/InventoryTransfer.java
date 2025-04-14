@@ -22,13 +22,16 @@ public class InventoryTransfer {
         // validate dealer IDs
         Dealer dealerFrom = findDealer(dealerIdFrom, dealerSet);
         Dealer dealerTo = findDealer(dealerIdTo, dealerSet);
+        if(!dealerFrom.getIsAcquisitionEnabled() || !dealerTo.getIsAcquisitionEnabled()){
+            return false;
+        }
 
         if (dealerFrom == null || dealerTo == null) {
             System.out.println("One or both Dealer IDs are invalid.");
             return false;
         }
 
-        if (dealerFrom.getVehicleList().isEmpty()) {
+        if (dealerFrom.getVehicleList().isEmpty() ) {
             System.out.println("Dealer " + dealerIdFrom + " has no vehicles to transfer.");
             return false;
         }

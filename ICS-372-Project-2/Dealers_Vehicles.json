@@ -44,6 +44,17 @@
     "acquisition_date" : 3456332,
     "is_loaned" : false
   }, {
+    "dealership_id" : "003",
+    "dealer_name" : "",
+    "is_acquisition_enabled" : true,
+    "vehicle_type" : "pickup",
+    "vehicle_manufacturer" : "Toyota",
+    "vehicle_model" : "Tundra",
+    "vehicle_id" : "52523",
+    "price" : 22600.0,
+    "acquisition_date" : 0,
+    "is_loaned" : false
+  }, {
     "dealership_id" : "485",
     "dealer_name" : "Wacky Bob’s Automall",
     "is_acquisition_enabled" : true,
@@ -52,17 +63,6 @@
     "vehicle_model" : "Range Rover",
     "vehicle_id" : "848432",
     "price" : 17000.0,
-    "acquisition_date" : 0,
-    "is_loaned" : false
-  }, {
-    "dealership_id" : "485",
-    "dealer_name" : "Wacky Bob’s Automall",
-    "is_acquisition_enabled" : true,
-    "vehicle_type" : "pickup",
-    "vehicle_manufacturer" : "Toyota",
-    "vehicle_model" : "Tundra",
-    "vehicle_id" : "52523",
-    "price" : 22600.0,
     "acquisition_date" : 0,
     "is_loaned" : false
   }, {
